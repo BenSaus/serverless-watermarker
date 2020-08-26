@@ -3,8 +3,8 @@ Serverless Image Watermarker
 This small API is a serverless system to upload images to S3 and watermark them using Sharp JS.
 
 #### Process
-1. First the Vue JS client obtains a signed url to upload the image from the API
-2. The client can then upload the image, which is placed in a staging S3 bucket
+1. First the Vue JS client calls the API and obtains a presigned url to upload the image
+2. The client can then uploads the image, which is placed in a staging S3 bucket
 3. The client can then call the API to watermark the image and publish it for public viewing
 4. Lastly, lambda functions watermark the image if requested and move the image to a public S3 bucket where it can be served up directly or used by Amazon's Serverless Image Handler
 
@@ -42,6 +42,6 @@ serverless deploy
 ```
 ./package.bash
 ```
-4. The Serverless framework setup in ImageAPI includes a stub function called Watermark. Manually upload the `output.zip` that package.bash produces into this lambda function
+4. The Serverless deployment earlier included a stub lambda function called Watermark. Manually upload and overwrite this function with the `output.zip` that package.bash produced.
 
 
