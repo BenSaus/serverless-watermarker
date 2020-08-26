@@ -1,6 +1,15 @@
 ## Serverless Image Watermarker
+=====
+Using AWS Lambda, API Gateway, and the Serverless framework, this system watermarks images uploaded to AWS S3. 
 
-Notes
+#### Process
+1. First the client obtains a signed url to upload the image
+2. Then the client uploads the image
+3. The client can then call the API to watermark the image or just publish it
+4. Lambda functions watermark the image if requested and move the image to a public S3 bucket
+
+
+### Notes
 =====
 Currently Serverless cannot be used with precompiled binaries, such as those needed by the Sharp JS library.
 
@@ -8,7 +17,7 @@ Currently Serverless cannot be used with precompiled binaries, such as those nee
 2. Run package.bash to compile libs and create the zip file
 3. Upload to AWS
 
-Program outline
+### Program outline
 ===============
 
 1. This lambda is first triggered by an S3 putobject event
