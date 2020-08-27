@@ -1,44 +1,35 @@
-
 const AWS = require("aws-sdk")
 AWS.config.update({ region: process.env.REGION || "us-west-2" })
 const s3 = new AWS.S3({ signatureVersion: "v4" })
 
 const sharp = require("sharp")
 
-// Resize watermark to proportion of specified image
-//      If specified image is 2000x1000
-//          watermark is set to 10%
-//          watermark width = 200, height = hold aspect ratio
-
 exports.handler = async (event) => {
     const requestBody = JSON.parse(event.body)
     const imageName = requestBody.imageName
 
-    const watermarkDark = requestBody.watermarkDark
     const watermarkGravity = requestBody.watermarkGravity
+    const watermarkDark = requestBody.watermarkDark ? requestBody.watermarkDark : false
     const watermarkWidth = requestBody.watermarkWidth ? requestBody.watermarkWidth : null
     const watermarkBottom = requestBody.watermarkBottom ? requestBody.watermarkBottom : 0
     const watermarkTop = requestBody.watermarkTop ? requestBody.watermarkTop : 0
 
+    console.log('watermark')
     console.log(imageName, watermarkGravity, watermarkWidth, watermarkBottom, watermarkTop, watermarkDark)
 
 
-    console.log('watermark')
     let watermark
-
     if(watermarkDark) 
         watermark = await getFile(process.env.WATERMARK_BUCKET, process.env.WATERMARK_DARK_KEY)
     else
         watermark = await getFile(process.env.WATERMARK_BUCKET, process.env.WATERMARK_KEY)
 
-
     let processedWatermark = await resizeImage(watermark, watermarkWidth)
     console.log('resized image')
     if (watermarkBottom || watermarkTop) {
         console.log('watermark bottom')
-        processedWatermark = await extendBottomImage(processedWatermark, watermarkTop, watermarkBottom)
+        processedWatermark = await extendImage(processedWatermark, watermarkTop, watermarkBottom)
     }
-
 
     console.log('creating watermark pipe')
     const watermarkingPipe = createWatermarkPipe(processedWatermark, watermarkGravity)
@@ -50,9 +41,8 @@ exports.handler = async (event) => {
     imageStream.pipe(watermarkingPipe)
 
     console.log('upload')
-    const uploadResp = await upload(imageName, watermarkingPipe)
-    console.log(uploadResp)
-
+    // TODO: Check response for errors
+    const uploadResp = await uploadToBucket(imageName, watermarkingPipe)
 
     return respond(200, {message: 'success'})
 }
@@ -84,7 +74,7 @@ async function resizeImage (buffer, width) {
         .toBuffer()
 }
 
-async function extendBottomImage(buffer, top, bottom) {
+async function extendImage(buffer, top, bottom) {
     return sharp(buffer)
         .extend({ 
             top: top,
@@ -107,7 +97,7 @@ function getReadStream (filename) {
     return s3.getObject(getParams).createReadStream()
 }
 
-// Doesn't seem to work with read streams
+// Doesn't work with read streams
 async function getImageMetadata (data) {
     const image = sharp(data)
     console.log('getImageMetaData')
@@ -129,7 +119,7 @@ function createWatermarkPipe (watermark, watermarkGravity) {
         })
 }
 
-async function upload (filename, body) {
+async function uploadToBucket (filename, body) {
     // Upload image to destination bucket
     const params = {
         Bucket: process.env.STAGING_BUCKET,

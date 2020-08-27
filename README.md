@@ -36,11 +36,12 @@ Because of this, the watermarking lambda is seperated from the main imageAPI and
 
 2. Deploy ImageAPI using the Serverless framework
 ```
-serverless deploy
+imageAPI/serverless deploy
 ```
 3. Then inside ImageAPIWatermark, compile the SharpJS binaries by executing package.bash
 ```
-./package.bash
+cd ImageAPIWatermark
+package.bash
 ```
 4. The Serverless deployment earlier included a stub lambda function called Watermark. Manually upload and overwrite this function with the `output.zip` that package.bash produced.
 
