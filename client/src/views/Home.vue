@@ -10,10 +10,21 @@
             <!-- <p v-if="imageKey" class="font-size: 2rem">Image Key: {{imageKey}}</p> -->
         </div>
 
-        <div style="margin: 5rem;">
-            <button v-if="imageKey" @click="onClickWatermark">Watermark</button>
+        <div v-if="imageKey"  style="margin: 5rem;">
+            <label for="">Watermark Gravity:</label>
+            <select name="" id="" v-model="watermarkOptions.gravity">
+                <option value="north">north</option>
+                <option value="south">south</option>
+                <option value="east">east</option>
+                <option value="west">west</option>
+            </select>
             <br>
-            <button v-if="imageKey" @click="onClickPublish" style="margin-top: 1rem">Publish</button>
+            <label for="">Dark Watermark:</label>
+            <input type="checkbox" v-model="watermarkOptions.dark">
+            <br>
+            <button @click="onClickWatermark" style="margin-top: 1rem">Watermark</button>
+            <br>
+            <button @click="onClickPublish" style="margin-top: 1rem">Publish</button>
         </div>
 
         <p v-if="imageUrl" class="font-size: 2rem"><a target="_blank" :href="imageUrl">{{imageUrl}}</a></p>
@@ -31,7 +42,13 @@ export default {
         return {
             status: 'Waiting for image...',
             imageKey: '',
-            imageUrl: null
+            imageUrl: null,
+            watermarkOptions: {
+                dark: false,
+                gravity: 'south',
+                width: 300,
+                bottom: 20,
+            }
         }
     },
     components: {
@@ -50,13 +67,8 @@ export default {
         async onClickWatermark() {
             this.status = 'Watermarking image...'
 
-            const watermarkOptions = {
-                dark: false,
-                gravity: 'south',
-                width: 300,
-                bottom: 20,
-            }
-            const result = await this.watermarkImage(this.imageKey, watermarkOptions)
+
+            const result = await this.watermarkImage(this.imageKey, this.watermarkOptions)
 
             this.status = 'Watermark Complete'
         },
