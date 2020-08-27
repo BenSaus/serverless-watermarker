@@ -7,7 +7,7 @@
 
         <div>
             <p class="font-size: 2rem">Status: {{status}}</p>
-            <p v-if="imageKey" class="font-size: 2rem">Image Key: {{imageKey}}</p>
+            <!-- <p v-if="imageKey" class="font-size: 2rem">Image Key: {{imageKey}}</p> -->
         </div>
 
         <div style="margin: 5rem;">
@@ -16,7 +16,7 @@
             <button v-if="imageKey" @click="onClickPublish" style="margin-top: 1rem">Publish</button>
         </div>
 
-        <p v-if="imageUrl" class="font-size: 2rem"><a :href="imageUrl">{{imageUrl}}</a></p>
+        <p v-if="imageUrl" class="font-size: 2rem"><a target="_blank" :href="imageUrl">{{imageUrl}}</a></p>
     </div>
 </template>
 

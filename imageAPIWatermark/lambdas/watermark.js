@@ -124,7 +124,8 @@ async function uploadToBucket (filename, body) {
     const params = {
         Bucket: process.env.STAGING_BUCKET,
         Key: filename,
-        Body: body
+        Body: body,
+        ContentType: 'image/jpeg'
     }
 
     const uploadResp = await ( new Promise((resolve, reject) => {
