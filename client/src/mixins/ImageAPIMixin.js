@@ -12,7 +12,10 @@ const ImageAPIMixin = {
                 { headers: { "x-api-key": config.api_key } }
             )
 
-            return result
+            // TODO: Test response for errors here...
+
+            const imageUrl = config.publish_bucket_url + imageKey
+            return imageUrl
         },
 
         async watermarkImage(imageKey, options) {
@@ -30,6 +33,8 @@ const ImageAPIMixin = {
                 },
                 { headers: { "x-api-key": config.api_key } }
             )
+
+            // TODO: Test response for errors here...
 
             return result
         },

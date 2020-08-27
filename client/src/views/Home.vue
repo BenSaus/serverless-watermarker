@@ -11,10 +11,12 @@
         </div>
 
         <div style="margin: 5rem;">
-            <button @click="onClickWatermark">Watermark</button>
-            <button @click="onClickPublish">Publish</button>
+            <button v-if="imageKey" @click="onClickWatermark">Watermark</button>
+            <br>
+            <button v-if="imageKey" @click="onClickPublish" style="margin-top: 1rem">Publish</button>
         </div>
 
+        <p v-if="imageUrl" class="font-size: 2rem"><a :href="imageUrl">{{imageUrl}}</a></p>
     </div>
 </template>
 
@@ -28,7 +30,8 @@ export default {
     data() {
         return {
             status: 'Waiting for image...',
-            imageKey: ''
+            imageKey: '',
+            imageUrl: null
         }
     },
     components: {
@@ -37,6 +40,8 @@ export default {
     methods: {
         onUploadBegun() {
             this.status = 'Uploading image...'
+            this.imageKey = ''
+            this.imageUrl = null
         },
         onUploadComplete(imageKey) {
             this.status = 'Image uploaded'
@@ -49,10 +54,10 @@ export default {
             this.status = 'Watermarking image...'
 
             const watermarkOptions = {
-                dark: true,
+                dark: false,
                 gravity: 'south',
                 width: 300,
-                bottom: 100,
+                bottom: 20,
             }
             const result = await this.watermarkImage(this.imageKey, watermarkOptions)
             console.log(result)
@@ -65,7 +70,7 @@ export default {
 
             this.status = 'Publishing image...'
 
-            const result = await this.publishImage(this.imageKey)
+            this.imageUrl = await this.publishImage(this.imageKey)
             console.log(result)
 
             this.status = 'Image Published'
