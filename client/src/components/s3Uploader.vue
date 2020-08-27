@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <img :src="imageSrc" class="previewBox"/>
+            <img v-if="imageSrc" :src="imageSrc" class="previewBox"/>
             <input type="file"
                 @change="onFileChange($event)"
                 accept="image/*.jpg"
@@ -35,14 +35,13 @@ export default {
     
             // The key is used to construct the url. It itself is not critical but for now I'm storing it anyway
             this.image_data.key = await this.uploadImage(this.$refs.fileInput.files[0])
-            
+
             this.$emit('onUploadComplete', this.image_data.key)
         },
         async displayImage (file) {
             const reader = new FileReader()
             
             reader.onload = (e) => {
-                console.log('length: ', e.target.result.includes('data:image/jpeg'))
                 if (!e.target.result.includes('data:image/jpeg')) {
                     return alert('Wrong file type - JPG only.')
                 }

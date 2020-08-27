@@ -14,7 +14,6 @@ const ImageUploadMixin = {
             return await this._upload(formData, presignedResp.data.data.url)
         },
         async _getPresignedUrl() {
-            console.log("GetSigned URL")
             return await axios.get(config.api_gateway + "signedUrl", {
                 headers: { "x-api-key": config.api_key },
             })

@@ -4,7 +4,6 @@ import config from "../../config"
 const ImageAPIMixin = {
     methods: {
         async publishImage(imageKey) {
-            console.log("Publish Image")
             const url = config.api_gateway + "image/publish"
             const result = await axios.post(
                 url,
@@ -19,7 +18,6 @@ const ImageAPIMixin = {
         },
 
         async watermarkImage(imageKey, options) {
-            console.log("Watermark Image")
             const url = config.api_gateway + "image/watermark"
             const result = await axios.post(
                 url,

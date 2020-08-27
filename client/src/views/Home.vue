@@ -48,9 +48,6 @@ export default {
             this.imageKey = imageKey
         },
         async onClickWatermark() {
-            console.log('Watermark')
-            console.log(this.$refs.uploader.getImageData())
-
             this.status = 'Watermarking image...'
 
             const watermarkOptions = {
@@ -60,18 +57,13 @@ export default {
                 bottom: 20,
             }
             const result = await this.watermarkImage(this.imageKey, watermarkOptions)
-            console.log(result)
 
             this.status = 'Watermark Complete'
         },
         async onClickPublish() {
-            console.log('Publish')
-            console.log(this.$refs.uploader.getImageData())
-
             this.status = 'Publishing image...'
 
             this.imageUrl = await this.publishImage(this.imageKey)
-            console.log(result)
 
             this.status = 'Image Published'
         }
