@@ -8,10 +8,6 @@
                 class="input-file"
                 ref="fileInput"
             >
-            <!-- <input type="button" value="Clear" @click="onClickClear"> -->
-        </div>
-        <div v-if="isSaving">
-            <div class="tw-ml-5">Uploading...</div>
         </div>
     </div>    
 </template>
@@ -25,7 +21,6 @@ export default {
     data() {
         return {
             isInitial: true,
-            isSaving: false,
             imageSrc: null,
             image_data: {},
         }
@@ -36,14 +31,12 @@ export default {
     methods: {
         async onFileChange (e) {
             this.displayImage(e.target.files[0])
-            this.isSaving = true
+            this.$emit('onUploadBegun')
     
             // The key is used to construct the url. It itself is not critical but for now I'm storing it anyway
             this.image_data.key = await this.uploadImage(this.$refs.fileInput.files[0])
-            console.log(this.image_data.key)
-            // this.image_data.url = this.getSIHImageUrl(this.image_data.key)
             
-            this.isSaving = false
+            this.$emit('onUploadComplete', this.image_data.key)
         },
         async displayImage (file) {
             const reader = new FileReader()

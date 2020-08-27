@@ -22,8 +22,8 @@ const ImageAPIMixin = {
                 url,
                 { 
                     imageName: imageKey, 
-                    watermarkDark: options.dark,
                     watermarkGravity: options.gravity,
+                    watermarkDark: options.dark,
                     watermarkWidth: options.width,
                     watermarkBottom: options.bottom,
                     watermarkTop: options.top,
